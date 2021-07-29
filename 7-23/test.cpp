@@ -8,6 +8,19 @@ using namespace std;
 #define STRINGIZE(x) #x
 #define SHADER(shader) "" STRINGIZE(shader)
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow *window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+}
+
 int main()
 {
 	glfwInit();
@@ -122,11 +135,14 @@ int main()
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
+
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  //窗口大小改变 回调执行framebuffer_size_callback 重新指定渲染视口
 	//绘制
 	while (!glfwWindowShouldClose(window))   //不关闭一直绘制
 	{
-		//
+		//清屏指定颜色
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		program->UseProgram();
 
@@ -145,6 +161,7 @@ int main()
 		vao->Draw();
 		aa += 0.003;
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -157,3 +174,4 @@ int main()
 	delete program;
 	return 0;
 }
+
