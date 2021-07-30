@@ -47,11 +47,10 @@ int main()
 
 	float vertex[] =
 	{
-		-1.0f,1.0f,0.0f,
-		1.0f,1.0f,0.0f,
+		-0.5f,-0.5f,0.0f,
+		0.5f,-0.5f,0.0f,
 	
-		1.0f,-1.0f,0.0f,
-		-1.0f,-1.0f,0.0f
+		0.0f,0.5f,0.0f
 	};
 
 	unsigned int index[] = {
@@ -70,26 +69,16 @@ int main()
 	};
 
 	VAO *vao = new VAO();
-	vao->AddVertex3D(vertex, 6, 0);
-	vao->AddVertex3D(vertexUV, 4, 1);
-	vao->SetIndexData(index, 6);
+	vao->AddVertex3D(vertex, 3, 0);
 
-	
 	float aa = 1;
 	//shader源码
 	const char * vertexShaderSource = SHADER(
 		#version 330\n
-		layout(location = 0) in vec3 pos; //输入
-		layout(location = 1) in vec3 uvPos; //输入
-		out vec3 outPos;
-		out vec3 outUVPos;
-		uniform float a;
+		layout(location = 0) in vec3 pos; 
 		void main()
 		{
-			outPos = pos;
-			outUVPos = uvPos;
-			float _a = sin(a);
-			gl_Position = vec4(pos*_a, 1.0); //输出
+			gl_Position = vec4(pos, 1.0); //输出
 		}
 	);
 
@@ -97,14 +86,9 @@ int main()
 		#version 330\n
 		//输入来自顶点着色器 需要顶点着色器定义 out 变量
 		out vec4 outColor;
-		in vec3 outPos;
-		in vec3 outUVPos;
-		uniform sampler2D tex;
 		void main()
 		{
-			vec2 uv = vec2(outUVPos.x, outUVPos.y);
-			vec4 color = texture(tex, uv);
-			outColor = color; //输出
+			outColor = vec4(1.0f,0.5f,0.2f,1.0f); //输出
 		}
 	);
 	Shader *vertexShader = new Shader(vertexShaderSource, ShaderType::VERTEX);
@@ -121,19 +105,19 @@ int main()
 		0,0,255,     127,127,127
 	};
 
-	GLuint texId = 0;
-	glGenTextures(1, &texId);
+	//GLuint texId = 0;
+	//glGenTextures(1, &texId);
 
-	glBindTexture(GL_TEXTURE_2D, texId);
+	//glBindTexture(GL_TEXTURE_2D, texId);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);//1字节对齐
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);//1字节对齐
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
 
 	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
 
@@ -152,15 +136,15 @@ int main()
 		//tex传给shader  使用glUniform1i 
 		//纹理单元 0-31 编号
 		//传入纹理单元号0
-		GLuint texLoc = glGetUniformLocation(program->programId, "tex");
+		//GLuint texLoc = glGetUniformLocation(program->programId, "tex");
 		//激活0号位单元
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texId);
-		glUniform1i(texLoc, 0);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, texId);
+		//glUniform1i(texLoc, 0);
 
 		vao->Draw();
-		aa += 0.003;
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//aa += 0.003;
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
