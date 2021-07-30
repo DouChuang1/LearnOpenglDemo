@@ -45,12 +45,27 @@ int main()
 
 	//顶点数据
 
-	float vertex[] =
+	float vertex1[] =
 	{
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
+		-0.5f,0,0,
+		-0.5f,0.5f,0,
+		0,0,0,
+		0,0.5f,0
+	};
+
+	float vertex2[] =
+	{
+		0.25,0.5f,0.0,
+		0.25f,0.0f,0.0
+		
+	};
+
+	float vertex3[] =
+	{
+		0.5f,0.5f,0.0,
+		0.5f,0.0,0.0,
+		0.75f,0.0,0.0,
+		0.75f,0.5f,0.0
 	};
 
 	unsigned int index[] = {
@@ -68,9 +83,14 @@ int main()
 		0.0f,0.0f,0.0f
 	};
 
-	VAO *vao = new VAO();
-	vao->AddVertex3D(vertex, 4, 0);
-	vao->SetIndexData(index, 6);
+	VAO *vao1 = new VAO();
+	vao1->AddVertex3D(vertex1, 4, 0);
+
+	VAO *vao2 = new VAO();
+	vao2->AddVertex3D(vertex2, 2, 0);
+
+	VAO *vao3 = new VAO();
+	vao3->AddVertex3D(vertex3, 4, 0);
 
 	float aa = 1;
 	//shader源码
@@ -121,7 +141,7 @@ int main()
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
 
 	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  //窗口大小改变 回调执行framebuffer_size_callback 重新指定渲染视口
 	//绘制
@@ -144,10 +164,15 @@ int main()
 		//glBindTexture(GL_TEXTURE_2D, texId);
 		//glUniform1i(texLoc, 0);
 
-		vao->Draw();
+		//vao->Draw();
 		//aa += 0.003;
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		vao1->BindVAO();
+		glDrawArrays(GL_LINE_STRIP, 0, 4);
+		vao2->BindVAO();
+		glDrawArrays(GL_LINES, 0, 2);
+
+		vao3->BindVAO();
+		glDrawArrays(GL_LINE_STRIP, 0, 4);
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -155,7 +180,9 @@ int main()
 
 	//释放
 	glfwTerminate();
-	delete vao;
+	delete vao1;
+	delete vao2;
+	delete vao3;
 	delete vertexShader;
 	delete fragmentShader;
 	delete program;
