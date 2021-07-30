@@ -47,15 +47,15 @@ int main()
 
 	float vertex[] =
 	{
-		-0.5f,-0.5f,0.0f,
-		0.5f,-0.5f,0.0f,
-	
-		0.0f,0.5f,0.0f
+		0.5f,  0.5f, 0.0f,  // top right
+		0.5f, -0.5f, 0.0f,  // bottom right
+		-0.5f, -0.5f, 0.0f,  // bottom left
+		-0.5f,  0.5f, 0.0f   // top left 
 	};
 
 	unsigned int index[] = {
-		0,3,1,
-		1,3,2
+		0,1,3,
+		1,2,3
 	};
 
 
@@ -69,7 +69,8 @@ int main()
 	};
 
 	VAO *vao = new VAO();
-	vao->AddVertex3D(vertex, 3, 0);
+	vao->AddVertex3D(vertex, 4, 0);
+	vao->SetIndexData(index, 6);
 
 	float aa = 1;
 	//shader源码
@@ -120,6 +121,7 @@ int main()
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
 
 	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  //窗口大小改变 回调执行framebuffer_size_callback 重新指定渲染视口
 	//绘制
@@ -144,7 +146,8 @@ int main()
 
 		vao->Draw();
 		//aa += 0.003;
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
