@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include "Shader.h"
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 using namespace std;
 
 #define STRINGIZE(x) #x
@@ -47,41 +49,51 @@ int main()
 
 	float vertex1[] =
 	{
-		// positions         // colors
-		0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-		0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+		//为了适配封装的VAO方法 UV坐标暂时使用三维的
+		// positions          // colors           // texture coords
+		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,0.0f,   // top right
+		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,0.0f,  // bottom right
+	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,0.0f,   // bottom left
+	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f,0.0f   // top left 
 	};
 
+	unsigned int indices[] = {
+	   0, 1, 3, // first triangle
+	   1, 2, 3  // second triangle
+	};
 	VAO *vao1 = new VAO();
 
-	vector<int> layout = { 0,1 };
-	vao1->AddVertex3D(vertex1, 3, layout);
+	vector<int> layout = { 0,1,2 };
+	vao1->AddVertex3D(vertex1, 4, layout);
+	vao1->SetIndexData(indices,6);
 
 	Shader *shader = new Shader("vert.vs", "fragment.fs");
 
-	int imgWidth = 2;
-	int imgHeight = 2;
+	int width, height, nrChannels;
 
-	unsigned char imgData[]=
+	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+
+	GLuint texId = 0;
+	glGenTextures(1, &texId);
+	glBindTexture(GL_TEXTURE_2D, texId);
+
+	//纹理包装以及过滤模式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (data)
 	{
-		255,0,0,     0,255,0,
-		0,0,255,     127,127,127
-	};
-
-	//GLuint texId = 0;
-	//glGenTextures(1, &texId);
-
-	//glBindTexture(GL_TEXTURE_2D, texId);
-
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "Failed to load texture" << endl;
+	}
+	stbi_image_free(data);
 	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);//1字节对齐
-
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
 
 	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -94,22 +106,16 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		shader->use();
-		float timeValue = glfwGetTime();
-		float greenValue = sin(timeValue) / 2.0f + 0.5f;
-		shader->setFloat4("outColor", 0.0f, greenValue, 0.0f, 1.0f);
-		//tex传给shader  使用glUniform1i 
+		
 		//纹理单元 0-31 编号
 		//传入纹理单元号0
 		//GLuint texLoc = glGetUniformLocation(program->programId, "tex");
 		//激活0号位单元
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, texId);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texId);
 		//glUniform1i(texLoc, 0);
 
-		//vao->Draw();
-		//aa += 0.003;
-		vao1->BindVAO();
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		vao1->Draw();
 
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);

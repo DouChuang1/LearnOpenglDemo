@@ -136,13 +136,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="D:\3rdLibary\Includes\src\glad.c" />
-    <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="VAO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment.fs" />
+    <None Include="vert.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\container.jpg" />
+    <Image Include="..\wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
