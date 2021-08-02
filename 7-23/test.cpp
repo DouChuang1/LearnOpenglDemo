@@ -58,35 +58,7 @@ int main()
 	vector<int> layout = { 0,1 };
 	vao1->AddVertex3D(vertex1, 3, layout);
 
-	float aa = 1;
-	//shader源码
-	const char * vertexShaderSource = SHADER(
-		#version 330\n
-		layout(location = 0) in vec3 aPos;
-		layout(location = 1) in vec3 aColor;
-
-		out vec3 ourColor;
-		void main()
-		{
-			gl_Position = vec4(aPos, 1.0); //输出
-			ourColor = aColor;
-		}
-	);
-
-	const char * fragmentShaderSource = SHADER(
-		#version 330\n
-		//输入来自顶点着色器 需要顶点着色器定义 out 变量
-		out vec4 FragColor;
-		in vec3 ourColor;
-		void main()
-		{
-			FragColor = vec4(ourColor,1.0) ; //输出
-		}
-	);
-	Shader *vertexShader = new Shader(vertexShaderSource, ShaderType::VERTEX);
-	Shader *fragmentShader = new Shader(fragmentShaderSource, ShaderType::FRAGMENT);
-	
-	Program * program = new Program(vertexShader->shaderId, fragmentShader->shaderId);
+	Shader *shader = new Shader("vert.vs", "fragment.fs");
 
 	int imgWidth = 2;
 	int imgHeight = 2;
@@ -121,14 +93,10 @@ int main()
 		//清屏指定颜色
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		program->UseProgram();
-
-		GLuint loc = glGetUniformLocation(program->programId, "outColor");
-
+		shader->use();
 		float timeValue = glfwGetTime();
 		float greenValue = sin(timeValue) / 2.0f + 0.5f;
-		glUniform4f(loc, 0.0f,greenValue,0.0f,1.0f);
-
+		shader->setFloat4("outColor", 0.0f, greenValue, 0.0f, 1.0f);
 		//tex传给shader  使用glUniform1i 
 		//纹理单元 0-31 编号
 		//传入纹理单元号0
@@ -151,9 +119,7 @@ int main()
 	//释放
 	glfwTerminate();
 	delete vao1;
-	delete vertexShader;
-	delete fragmentShader;
-	delete program;
+	delete shader;
 	return 0;
 }
 
