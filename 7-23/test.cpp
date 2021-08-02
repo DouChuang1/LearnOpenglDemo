@@ -47,33 +47,40 @@ int main()
 
 	float vertex1[] =
 	{
-		0.0f,0.5f,0,
-		-0.5f,0.0f,0,
-		0.5f,0,0
+		// positions         // colors
+		0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+		0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
 	};
 
 	VAO *vao1 = new VAO();
-	vao1->AddVertex3D(vertex1, 3, 0);
+
+	vector<int> layout = { 0,1 };
+	vao1->AddVertex3D(vertex1, 3, layout);
 
 	float aa = 1;
 	//shader源码
 	const char * vertexShaderSource = SHADER(
 		#version 330\n
-		layout(location = 0) in vec3 pos; 
+		layout(location = 0) in vec3 aPos;
+		layout(location = 1) in vec3 aColor;
+
+		out vec3 ourColor;
 		void main()
 		{
-			gl_Position = vec4(pos, 1.0); //输出
+			gl_Position = vec4(aPos, 1.0); //输出
+			ourColor = aColor;
 		}
 	);
 
 	const char * fragmentShaderSource = SHADER(
 		#version 330\n
 		//输入来自顶点着色器 需要顶点着色器定义 out 变量
-		uniform vec4 outColor;
-		out vec4 finalColor;
+		out vec4 FragColor;
+		in vec3 ourColor;
 		void main()
 		{
-			finalColor = outColor ; //输出
+			FragColor = vec4(ourColor,1.0) ; //输出
 		}
 	);
 	Shader *vertexShader = new Shader(vertexShaderSource, ShaderType::VERTEX);

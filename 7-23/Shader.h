@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vector>
-
+#include <iostream>
 enum ShaderType
 {
 	VERTEX = 1,
@@ -37,7 +37,7 @@ public:
 	VAO();
 	~VAO();
 
-	int AddVertex3D(float *data, int vertexCount, int layout);
+	int AddVertex3D(float *data, int vertexCount, std::vector<int> layout);
 
 	int BindVAO();
 

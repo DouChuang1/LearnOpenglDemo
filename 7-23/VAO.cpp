@@ -5,7 +5,7 @@ VAO::VAO()
 	glGenVertexArrays(1, &vao);
 }
 
-int VAO::AddVertex3D(float *data, int vertexCount, int layout)
+int VAO::AddVertex3D(float *data, int vertexCount, std::vector<int> layout)
 {
 	glBindVertexArray(vao);
 
@@ -13,11 +13,25 @@ int VAO::AddVertex3D(float *data, int vertexCount, int layout)
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	glBufferData(GL_ARRAY_BUFFER, vertexCount*3 * sizeof(float), data, GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, vertexCount*3 * sizeof(float)*layout.size(), data, GL_STATIC_DRAW);
+	std::cout << layout.size() << std::endl;
 	//往layout传参数
-	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
-	glEnableVertexAttribArray(layout);         //layout为0的单元打开
+	for (int i = 0;i < layout.size();i++)
+	{
+		GLvoid* pointer = nullptr;
+		if (i == 0)
+		{
+			pointer = (GLvoid*)0;
+		}
+		else
+		{
+			pointer = (GLvoid*)(3 *i* sizeof(float));
+		}
+		glVertexAttribPointer(layout[i], 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float)*layout.size(), pointer);
+		std::cout << layout.size() << std::endl;
+		glEnableVertexAttribArray(layout[i]);         //layout为0的单元打开
+	}
+	
 
 	vboList.push_back(vbo);
 	glBindVertexArray(0);
