@@ -47,50 +47,13 @@ int main()
 
 	float vertex1[] =
 	{
-		-0.5f,0,0,
-		-0.5f,0.5f,0,
-		0,0,0,
-		0,0.5f,0
-	};
-
-	float vertex2[] =
-	{
-		0.25,0.5f,0.0,
-		0.25f,0.0f,0.0
-		
-	};
-
-	float vertex3[] =
-	{
-		0.5f,0.5f,0.0,
-		0.5f,0.0,0.0,
-		0.75f,0.0,0.0,
-		0.75f,0.5f,0.0
-	};
-
-	unsigned int index[] = {
-		0,1,3,
-		1,2,3
-	};
-
-
-	float vertexUV[]=
-	{
-		0.0f,1.0f,0.0f,
-		1.0f,1.0f,0.0f,
-
-		1.0f,0.0f,0.0f,
-		0.0f,0.0f,0.0f
+		0.0f,0.5f,0,
+		-0.5f,0.0f,0,
+		0.5f,0,0
 	};
 
 	VAO *vao1 = new VAO();
-	vao1->AddVertex3D(vertex1, 4, 0);
-
-	VAO *vao2 = new VAO();
-	vao2->AddVertex3D(vertex2, 2, 0);
-
-	VAO *vao3 = new VAO();
-	vao3->AddVertex3D(vertex3, 4, 0);
+	vao1->AddVertex3D(vertex1, 3, 0);
 
 	float aa = 1;
 	//shader源码
@@ -106,10 +69,11 @@ int main()
 	const char * fragmentShaderSource = SHADER(
 		#version 330\n
 		//输入来自顶点着色器 需要顶点着色器定义 out 变量
-		out vec4 outColor;
+		uniform vec4 outColor;
+		out vec4 finalColor;
 		void main()
 		{
-			outColor = vec4(1.0f,0.5f,0.2f,1.0f); //输出
+			finalColor = outColor ; //输出
 		}
 	);
 	Shader *vertexShader = new Shader(vertexShaderSource, ShaderType::VERTEX);
@@ -152,8 +116,11 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		program->UseProgram();
 
-		GLuint loc = glGetUniformLocation(program->programId, "a");
-		glUniform1f(loc, aa);
+		GLuint loc = glGetUniformLocation(program->programId, "outColor");
+
+		float timeValue = glfwGetTime();
+		float greenValue = sin(timeValue) / 2.0f + 0.5f;
+		glUniform4f(loc, 0.0f,greenValue,0.0f,1.0f);
 
 		//tex传给shader  使用glUniform1i 
 		//纹理单元 0-31 编号
@@ -167,12 +134,8 @@ int main()
 		//vao->Draw();
 		//aa += 0.003;
 		vao1->BindVAO();
-		glDrawArrays(GL_LINE_STRIP, 0, 4);
-		vao2->BindVAO();
-		glDrawArrays(GL_LINES, 0, 2);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		vao3->BindVAO();
-		glDrawArrays(GL_LINE_STRIP, 0, 4);
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -181,8 +144,6 @@ int main()
 	//释放
 	glfwTerminate();
 	delete vao1;
-	delete vao2;
-	delete vao3;
 	delete vertexShader;
 	delete fragmentShader;
 	delete program;
