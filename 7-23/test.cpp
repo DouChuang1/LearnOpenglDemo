@@ -76,13 +76,11 @@ int main()
 	GLuint texId = 0;
 	glGenTextures(1, &texId);
 	glBindTexture(GL_TEXTURE_2D, texId);
-
 	//纹理包装以及过滤模式
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -93,8 +91,32 @@ int main()
 		cout << "Failed to load texture" << endl;
 	}
 	stbi_image_free(data);
+
+	GLuint texId2 = 0;
+	glGenTextures(1, &texId2);
+	glBindTexture(GL_TEXTURE_2D, texId2);
+	//纹理包装以及过滤模式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	stbi_set_flip_vertically_on_load(true);
+	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "Failed to load texture" << endl;
+	}
+	stbi_image_free(data);
 	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);//1字节对齐
 
+	shader->use();
+	shader->setInt("ourTexture", 0);
+	shader->setInt("otherTexture", 1);
 	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -105,16 +127,16 @@ int main()
 		//清屏指定颜色
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		shader->use();
-		
 		//纹理单元 0-31 编号
 		//传入纹理单元号0
 		//GLuint texLoc = glGetUniformLocation(program->programId, "tex");
 		//激活0号位单元
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texId);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texId2);
+		shader->use();
 		//glUniform1i(texLoc, 0);
-
 		vao1->Draw();
 
 		processInput(window); //监听输入事件 按Escape 关闭窗口
