@@ -5,6 +5,11 @@
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 using namespace std;
 
 #define STRINGIZE(x) #x
@@ -135,7 +140,16 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texId);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texId2);
+
+		//¾ØÕó±ä»»
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		shader->use();
+		shader->setMat4("transform", transform);
+		//unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
+		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		//glUniform1i(texLoc, 0);
 		vao1->Draw();
 

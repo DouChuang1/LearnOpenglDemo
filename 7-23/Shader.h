@@ -8,6 +8,10 @@
 #include <vector>
 #include <iostream>
 
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 class Shader
 {
 public:
@@ -94,6 +98,11 @@ public:
 	void setFloat4(const std::string &name, float f1,float f2,float f3,float f4) const
 	{
 		glUniform4f(glGetUniformLocation(ID, name.c_str()), f1,f2,f3,f4);
+	}
+
+	void setMat4(const std::string &name, const glm::mat4 &mat) const
+	{
+		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
 
 private:
