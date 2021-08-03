@@ -142,12 +142,22 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texId2);
 
 		//¾ØÕó±ä»»
-		glm::mat4 transform = glm::mat4(1.0f);
-		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		//Ä£ÐÍ¾ØÕó
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		//View¾ØÕó
+		glm::mat4 view = glm::mat4(1.0f);
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+		//Í¶Ó°¾ØÕó
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.f);
 
 		shader->use();
-		shader->setMat4("transform", transform);
+		shader->setMat4("model", model);
+		shader->setMat4("view", view);
+		shader->setMat4("projection", projection);
 		//unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
 		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		//glUniform1i(texLoc, 0);
