@@ -158,14 +158,14 @@ int main()
 	shader->setInt("otherTexture", 1);
 	glViewport(0, 0, 800, 600);  //指定opengl渲染窗口位置 以及大小
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+	glEnable(GL_DEPTH_TEST);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  //窗口大小改变 回调执行framebuffer_size_callback 重新指定渲染视口
 	//绘制
 	while (!glfwWindowShouldClose(window))   //不关闭一直绘制
 	{
 		//清屏指定颜色
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//纹理单元 0-31 编号
 		//传入纹理单元号0
 		//GLuint texLoc = glGetUniformLocation(program->programId, "tex");
