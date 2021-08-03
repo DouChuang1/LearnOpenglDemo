@@ -52,14 +52,48 @@ int main()
 
 	//顶点数据
 
-	float vertex1[] =
-	{
-		//为了适配封装的VAO方法 UV坐标暂时使用三维的
-		// positions          // colors           // texture coords
-		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,0.0f,   // top right
-		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,0.0f,  // bottom right
-	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,0.0f,   // bottom left
-	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f,0.0f   // top left 
+	float vertices[] = {
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,0.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,0.0f,
+
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,0.0f
 	};
 
 	unsigned int indices[] = {
@@ -68,9 +102,9 @@ int main()
 	};
 	VAO *vao1 = new VAO();
 
-	vector<int> layout = { 0,1,2 };
-	vao1->AddVertex3D(vertex1, 4, layout);
-	vao1->SetIndexData(indices,6);
+	vector<int> layout = { 0,1 };
+	vao1->AddVertex3D(vertices, 36, layout);
+	//vao1->SetIndexData(indices,6);
 
 	Shader *shader = new Shader("vert.vs", "fragment.fs");
 
@@ -144,7 +178,7 @@ int main()
 		//矩阵变换
 		//模型矩阵
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
 		//View矩阵
 		glm::mat4 view = glm::mat4(1.0f);
@@ -161,7 +195,8 @@ int main()
 		//unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
 		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		//glUniform1i(texLoc, 0);
-		vao1->Draw();
+		vao1->BindVAO();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
