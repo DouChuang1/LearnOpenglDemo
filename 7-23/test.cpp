@@ -12,8 +12,14 @@
 
 using namespace std;
 
-#define STRINGIZE(x) #x
-#define SHADER(shader) "" STRINGIZE(shader)
+//camera setting
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+//walk around setting
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -26,6 +32,16 @@ void processInput(GLFWwindow *window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	float cameraSpeed = 2.5*deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront,cameraUp))*cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp))*cameraSpeed;
 }
 
 int main()
@@ -176,6 +192,12 @@ int main()
 	//绘制
 	while (!glfwWindowShouldClose(window))   //不关闭一直绘制
 	{
+		// per-frame time logic
+	   // --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		//清屏指定颜色
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -196,11 +218,8 @@ int main()
 
 		shader->use();
 		//构建相机矩阵
-		const float radius = 10.0f;
-		float camX = sin(glfwGetTime())*radius;
-		float camZ = cos(glfwGetTime())*radius;
 		glm::mat4 view;
-		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+		view = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
 		shader->setMat4("view", view);
 		shader->setMat4("projection", projection);
 		//unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
