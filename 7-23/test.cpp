@@ -182,6 +182,7 @@ int main()
 		colorsShader->setMat4("view", view);
 		colorsShader->setMat4("projection", projection);
 		colorsShader->setVec3("lightPos", lightPos);
+		colorsShader->setVec3("viewPos", camera->Position);
 		
 		glm::mat4 model = glm::mat4(1.0f);
 		colorsShader->setMat4("model", model);
