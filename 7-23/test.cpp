@@ -173,7 +173,6 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		colorsShader->use();
-		colorsShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		colorsShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 		//构建相机矩阵
 		glm::mat4 view;
