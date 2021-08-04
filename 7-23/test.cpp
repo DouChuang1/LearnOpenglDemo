@@ -181,6 +181,8 @@ int main()
 		glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)800 / (float)600, 0.1f, 100.0f);
 		colorsShader->setMat4("view", view);
 		colorsShader->setMat4("projection", projection);
+		lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+		lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
 		colorsShader->setVec3("lightPos", lightPos);
 		colorsShader->setVec3("viewPos", camera->Position);
 		
