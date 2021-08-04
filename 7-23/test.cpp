@@ -158,7 +158,7 @@ int main()
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//绘制
 	while (!glfwWindowShouldClose(window))   //不关闭一直绘制
 	{
@@ -185,6 +185,10 @@ int main()
 		lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
 		colorsShader->setVec3("lightPos", lightPos);
 		colorsShader->setVec3("viewPos", camera->Position);
+		colorsShader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		colorsShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		colorsShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		colorsShader->setFloat("material.shininess", 32);
 		
 		glm::mat4 model = glm::mat4(1.0f);
 		colorsShader->setMat4("model", model);
