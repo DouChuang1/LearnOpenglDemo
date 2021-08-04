@@ -43,6 +43,18 @@
     <None Include="fragment.fs">
       <Filter>源文件</Filter>
     </None>
+    <None Include="colors.vs">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="colors.fs">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="light.fs">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\container.jpg">
