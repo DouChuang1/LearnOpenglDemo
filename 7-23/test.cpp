@@ -173,7 +173,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		colorsShader->use();
-		colorsShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+
 		//构建相机矩阵
 		glm::mat4 view;
 		view = camera->GetViewMatrix();
@@ -188,6 +188,17 @@ int main()
 		colorsShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
 		colorsShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		colorsShader->setFloat("material.shininess", 32);
+
+		glm::vec3 lightColor;
+		lightColor.x = sin(glfwGetTime() * 2.0f);
+		lightColor.y = sin(glfwGetTime() * 0.7f);
+		lightColor.z = sin(glfwGetTime() * 1.3f);
+
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+		colorsShader->setVec3("light.ambient", ambientColor);
+		colorsShader->setVec3("light.diffuse", diffuseColor); // darken diffuse light a bit
+		colorsShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		
 		glm::mat4 model = glm::mat4(1.0f);
 		colorsShader->setMat4("model", model);
