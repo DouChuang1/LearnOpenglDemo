@@ -232,10 +232,12 @@ int main()
 
 		colorsShader->use();
 		colorsShader->setVec3("light.position",lightPos);
+		colorsShader->setVec3("light.direction", camera->Front);
+		colorsShader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
 		colorsShader->setVec3("viewPos", camera->Position);
 
 		colorsShader->setVec3("light.ambient", 0.2f,0.2f,0.2f);
-		colorsShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+		colorsShader->setVec3("light.diffuse", 0.8f, 0.8f, 0.8f); // darken diffuse light a bit
 		colorsShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
 		colorsShader->setFloat("light.constant", 1.0f);
@@ -272,16 +274,16 @@ int main()
 		}
 
 		// also draw the lamp object
-		lightShader->use();
-		lightShader->setMat4("projection", projection);
-		lightShader->setMat4("view", view);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-		lightShader->setMat4("model", model);
+		//lightShader->use();
+		//lightShader->setMat4("projection", projection);
+		//lightShader->setMat4("view", view);
+		//model = glm::mat4(1.0f);
+		//model = glm::translate(model, lightPos);
+		//model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		//lightShader->setMat4("model", model);
 
-		vao2->BindVAO();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//vao2->BindVAO();
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
