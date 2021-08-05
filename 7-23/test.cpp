@@ -180,6 +180,19 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,0.0f
 	};
 
+	// positions all containers
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	VAO *vao1 = new VAO();
 	vector<int> layout = { 0,1,2 };
@@ -194,7 +207,7 @@ int main()
 
 	unsigned int diffuseMap = loadTexture("container2.png");
 
-	unsigned int specularMap = loadTexture("materials_specular_map.png");
+	unsigned int specularMap = loadTexture("container2_specular.png");
 	colorsShader->use();
 	colorsShader->setInt("material.diffuse", 0);
 	colorsShader->setInt("material.specular", 1);
@@ -218,13 +231,13 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		colorsShader->use();
-		colorsShader->setVec3("light.position", lightPos);
+		colorsShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
 		colorsShader->setVec3("viewPos", camera->Position);
 
 		colorsShader->setVec3("light.ambient", 0.2f,0.2f,0.2f);
 		colorsShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 		colorsShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		colorsShader->setFloat("material.shininess", 64);
+		colorsShader->setFloat("material.shininess", 32);
 
 		glm::mat4 view;
 		view = camera->GetViewMatrix();
@@ -240,21 +253,19 @@ int main()
 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularMap);
+		
 		vao1->BindVAO();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			// calculate the model matrix for each object and pass it to shader before drawing
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			colorsShader->setMat4("model", model);
 
-		lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-		lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
-		lightShader->use();
-		lightShader->setMat4("projection", projection);
-		lightShader->setMat4("view", view);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-		lightShader->setMat4("model", model);
-
-		vao2->BindVAO();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
