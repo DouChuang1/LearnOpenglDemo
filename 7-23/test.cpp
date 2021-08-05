@@ -193,9 +193,11 @@ int main()
 	Shader *colorsShader = new Shader("colors.vs", "colors.fs");
 
 	unsigned int diffuseMap = loadTexture("container2.png");
+
+	unsigned int specularMap = loadTexture("materials_specular_map.png");
 	colorsShader->use();
 	colorsShader->setInt("material.diffuse", 0);
-
+	colorsShader->setInt("material.specular", 1);
 	glEnable(GL_DEPTH_TEST);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  //窗口大小改变 回调执行framebuffer_size_callback 重新指定渲染视口
 	glfwSetScrollCallback(window, scroll_callback);
@@ -237,9 +239,14 @@ int main()
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularMap);
 		vao1->BindVAO();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+		lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
 		lightShader->use();
 		lightShader->setMat4("projection", projection);
 		lightShader->setMat4("view", view);
