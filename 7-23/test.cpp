@@ -224,8 +224,6 @@ int main()
 		colorsShader->setVec3("light.ambient", 0.2f,0.2f,0.2f);
 		colorsShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 		colorsShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-		colorsShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		colorsShader->setFloat("material.shininess", 64);
 
 		glm::mat4 view;
