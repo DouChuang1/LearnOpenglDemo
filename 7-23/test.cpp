@@ -231,12 +231,16 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		colorsShader->use();
-		colorsShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+		colorsShader->setVec3("light.position",lightPos);
 		colorsShader->setVec3("viewPos", camera->Position);
 
 		colorsShader->setVec3("light.ambient", 0.2f,0.2f,0.2f);
 		colorsShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 		colorsShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+		colorsShader->setFloat("light.constant", 1.0f);
+		colorsShader->setFloat("light.linear", 0.09f);
+		colorsShader->setFloat("light.quadratic", 0.032f);
 		colorsShader->setFloat("material.shininess", 32);
 
 		glm::mat4 view;
@@ -266,6 +270,18 @@ int main()
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+
+		// also draw the lamp object
+		lightShader->use();
+		lightShader->setMat4("projection", projection);
+		lightShader->setMat4("view", view);
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		lightShader->setMat4("model", model);
+
+		vao2->BindVAO();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		processInput(window); //监听输入事件 按Escape 关闭窗口
 		glfwSwapBuffers(window);
 		glfwPollEvents();
