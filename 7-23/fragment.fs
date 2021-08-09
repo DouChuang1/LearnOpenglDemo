@@ -1,10 +1,7 @@
-#version 330
-//输入来自顶点着色器 需要顶点着色器定义 out 变量
+#version 330 core
 out vec4 FragColor;
-in vec3 TexCoord;
-uniform sampler2D ourTexture;
-uniform sampler2D otherTexture;
+
 void main()
 {
-	FragColor = mix(texture(ourTexture,TexCoord.xy),texture(otherTexture,TexCoord.xy),0.2) ; //输出
+    FragColor = vec4(0.04, 0.28, 0.26, 1.0);
 }

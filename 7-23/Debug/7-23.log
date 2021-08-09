@@ -1,12 +1,12 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: 中间目录(Debug\)包含从另一个项目(7-23.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
   test.cpp
 d:\github\learnopengl\learnopengldemo\7-23\shader.h(47): warning C4101: “e”: 未引用的局部变量
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(177): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(264): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(265): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(269): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(270): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(272): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(273): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(282): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(182): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(312): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(313): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(317): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(318): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(320): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(321): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(330): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
   7-23.vcxproj -> D:\github\LearnOpengl\LearnOpenglDemo\Debug\LearnOpengl.exe
