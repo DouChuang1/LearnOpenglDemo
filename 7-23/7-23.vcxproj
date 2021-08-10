@@ -160,6 +160,7 @@
     <Image Include="awesomeface.png" />
     <Image Include="container2.png" />
     <Image Include="container2_specular.png" />
+    <Image Include="grass.png" />
     <Image Include="marble.jpg" />
     <Image Include="materials_specular_map.png" />
     <Image Include="metal.png" />

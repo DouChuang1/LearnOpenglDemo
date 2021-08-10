@@ -72,21 +72,15 @@ int main()
 
 
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);  
 
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
 
 	// build and compile shaders
 	// -------------------------
 	Shader ourShader("colors.vs", "colors.fs");
-	Shader outlineShader("colors.vs", "fragment.fs");
 
 	float cubeVertices[] = {
 		// positions          // texture Coords
@@ -143,6 +137,30 @@ int main()
 		 5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 	};
 
+	float transparentVertices[] = {
+		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+		1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+	};
+
+	unsigned int transparentVAO, transparentVBO;
+	glGenVertexArrays(1, &transparentVAO);
+	glGenBuffers(1, &transparentVBO);
+
+	glBindVertexArray(transparentVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), &transparentVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindVertexArray(0);
+
 	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &cubeVBO);
@@ -170,6 +188,18 @@ int main()
 
 	unsigned int cunbeTexture = loadTexture("marble.jpg");
 	unsigned int planeTexture = loadTexture("metal.png");
+	unsigned int grassTexture = loadTexture("grass.png");
+
+	// transparent vegetation locations
+	// --------------------------------
+	vector<glm::vec3> vegetation
+	{
+		glm::vec3(-1.5f, 0.0f, -0.48f),
+		glm::vec3(1.5f, 0.0f, 0.51f),
+		glm::vec3(0.0f, 0.0f, 0.7f),
+		glm::vec3(-0.3f, 0.0f, -2.3f),
+		glm::vec3(0.5f, 0.0f, -0.6f)
+	};
 
 	ourShader.use();
 	ourShader.setInt("texture1", 0);
@@ -190,34 +220,19 @@ int main()
 		// render
 		// ------
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // don't forget to clear the stencil buffer!
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); 
 
 
 		// don't forget to enable shader before setting uniforms
 		
-		outlineShader.use();
+		ourShader.use();
 		// model/view/projection transformations
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
-		outlineShader.setMat4("projection", projection);
-		outlineShader.setMat4("view", view);
-
-		ourShader.use();
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("view", view);
-		// draw floor as normal, but don't write the floor to the stencil buffer, we only care about the containers. We set its mask to 0x00 to not write to the stencil buffer.
-		glStencilMask(0x00);
-		//plane
-		glBindVertexArray(planeVAO);
-		glBindTexture(GL_TEXTURE_2D, planeTexture);
-		ourShader.setMat4("model", glm::mat4(1.0f));
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
 
-		//正常绘制两个立方体，写入模板缓冲
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
 		// cubes
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -225,40 +240,28 @@ int main()
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 		ourShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
 		ourShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		//2.渲染通道:现在绘制稍微缩放的对象，这次禁用模板写入
-		//因为模板缓冲区现在被几个1填满了。缓冲区中为1的部分没有绘制，因此只绘制物体的大小差异，使它看起来像边界
-
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-		outlineShader.use();
-		float scale = 1.1f;
-
-		glBindVertexArray(cubeVAO);
-		//glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cunbeTexture);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		model = glm::scale(model, glm::vec3(scale, scale,scale));
-		outlineShader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(scale, scale, scale));
-		outlineShader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glEnable(GL_DEPTH_TEST);
 		
+		//plane
+		glBindVertexArray(planeVAO);
+		glBindTexture(GL_TEXTURE_2D, planeTexture);
+		model = glm::mat4(1.0f);
+		ourShader.setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//植被
+		glBindVertexArray(transparentVAO);
+		glBindTexture(GL_TEXTURE_2D, grassTexture);
+		for (unsigned int i = 0; i < vegetation.size(); i++)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, vegetation[i]);
+			ourShader.setMat4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
