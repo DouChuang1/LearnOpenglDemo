@@ -164,6 +164,7 @@
     <Image Include="marble.jpg" />
     <Image Include="materials_specular_map.png" />
     <Image Include="metal.png" />
+    <Image Include="window.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -77,6 +77,8 @@ int main()
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// build and compile shaders
 	// -------------------------
@@ -188,11 +190,11 @@ int main()
 
 	unsigned int cunbeTexture = loadTexture("marble.jpg");
 	unsigned int planeTexture = loadTexture("metal.png");
-	unsigned int grassTexture = loadTexture("grass.png");
+	unsigned int grassTexture = loadTexture("window.png");
 
 	// transparent vegetation locations
 	// --------------------------------
-	vector<glm::vec3> vegetation
+	vector<glm::vec3> windows
 	{
 		glm::vec3(-1.5f, 0.0f, -0.48f),
 		glm::vec3(1.5f, 0.0f, 0.51f),
@@ -216,6 +218,13 @@ int main()
 		// input
 		// -----
 		processInput(window);
+
+		std::map<float, glm::vec3> sorted;
+		for (unsigned int i = 0; i < windows.size(); i++)
+		{
+			float distance = glm::length(camera.Position - windows[i]);
+			sorted[distance] = windows[i];
+		}
 
 		// render
 		// ------
@@ -252,16 +261,17 @@ int main()
 		ourShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		//Ö²±»
+		//window
 		glBindVertexArray(transparentVAO);
 		glBindTexture(GL_TEXTURE_2D, grassTexture);
-		for (unsigned int i = 0; i < vegetation.size(); i++)
+		for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 		{
 			model = glm::mat4(1.0f);
-			model = glm::translate(model, vegetation[i]);
+			model = glm::translate(model, it->second);
 			ourShader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
+
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
