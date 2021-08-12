@@ -1,7 +1,7 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: 中间目录(Debug\)包含从另一个项目(7-23.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
   test.cpp
 d:\github\learnopengl\learnopengldemo\7-23\shader.h(47): warning C4101: “e”: 未引用的局部变量
-d:\github\learnopengl\learnopengldemo\7-23\test.cpp(240): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\github\learnopengl\learnopengldemo\7-23\test.cpp(239): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 d:\github\learnopengl\learnopengldemo\7-23\test.cpp(345): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 d:\github\learnopengl\learnopengldemo\7-23\test.cpp(346): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 d:\github\learnopengl\learnopengldemo\7-23\test.cpp(350): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据

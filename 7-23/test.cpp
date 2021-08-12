@@ -84,49 +84,48 @@ int main()
 	Shader ourShader("colors.vs", "colors.fs");
 	Shader skyShader("vert.vs", "fragment.fs");
 
-	float cubeVertices[] = {
-		// back face
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // bottom-right    
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right              
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left                
-	// front face
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-right        
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // top-left        
-	// left face
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-left       
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
-	// right face
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right      
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right          
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
-	// bottom face          
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // top-left        
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
-	// top face
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right                 
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, // bottom-left  
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f  // top-left          
+	float vertices[] = {
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 	float skyboxVertices[] = {
 		// positions          
@@ -189,11 +188,11 @@ int main()
 
 	glBindVertexArray(cubeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
 
 	
@@ -268,6 +267,7 @@ int main()
 		glm::mat4 view = camera.GetViewMatrix();
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("view", view);
+		ourShader.setVec3("cameraPos", camera.Position);
 
 		// cubes
 		glBindVertexArray(cubeVAO);
