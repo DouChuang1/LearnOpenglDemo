@@ -164,6 +164,12 @@
     <Image Include="marble.jpg" />
     <Image Include="materials_specular_map.png" />
     <Image Include="metal.png" />
+    <Image Include="resources\back.jpg" />
+    <Image Include="resources\bottom.jpg" />
+    <Image Include="resources\front.jpg" />
+    <Image Include="resources\left.jpg" />
+    <Image Include="resources\right.jpg" />
+    <Image Include="resources\top.jpg" />
     <Image Include="window.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

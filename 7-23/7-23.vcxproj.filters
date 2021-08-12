@@ -93,5 +93,23 @@
     <Image Include="window.png">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="resources\back.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resources\bottom.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resources\front.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resources\left.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resources\right.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resources\top.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
